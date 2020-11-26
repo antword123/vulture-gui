@@ -151,10 +151,10 @@ class FilterPolicy(models.Model):
     mmdarwin_enabled = models.BooleanField(default=False)
 
     """ The custom rsyslog message's fields to get """
-    mmdarwin_parameters = models.ListField(default=[])
+    mmdarwin_parameters = models.JSONField(default=[])
 
     """ Status of filter for each nodes """
-    status = models.DictField(default={})
+    status = models.JSONField(default={})
 
     """ The number of cache entries (not memory size) """
     cache_size = models.PositiveIntegerField(
@@ -180,7 +180,7 @@ class FilterPolicy(models.Model):
     conf_path = models.TextField()
 
     """ A dict representing the filter configuration """
-    config = models.DictField(default={
+    config = models.JSONField(default={
             "redis_socket_path": "/var/sockets/redis/redis.sock",
             "alert_redis_list_name": DARWIN_REDIS_ALERT_LIST,
             "alert_redis_channel_name": DARWIN_REDIS_ALERT_CHANNEL,

@@ -129,7 +129,7 @@ class Frontend(models.Model):
         help_text=_("Name of HAProxy frontend"),
     )
     """ Tags """
-    tags = models.ListField(
+    tags = models.JSONField(
         models.SlugField(default=""),
         default=[],
         help_text=_("Tags to set on this object for search")
@@ -278,7 +278,7 @@ class Frontend(models.Model):
     )
 
     """ Generated configuration depending on Node listening on """
-    configuration = models.DictField(
+    configuration = models.JSONField(
         default={}
     )
     """ Type of template used by rsyslog to parse/forward logs """
@@ -291,7 +291,7 @@ class Frontend(models.Model):
         help_text=_("Tag used in rsyslog template")
     )
     """ Status of frontend for each nodes """
-    status = models.DictField(
+    status = models.JSONField(
         default={}
     )
     """ Mode of listening - tcp is handled by HAProxy, udp by Rsyslog """
@@ -597,7 +597,7 @@ class Frontend(models.Model):
         default=datetime.datetime.utcnow
     )
 
-    keep_source_fields = models.DictField(
+    keep_source_fields = models.JSONField(
         default={}
     )
 

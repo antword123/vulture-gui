@@ -213,7 +213,7 @@ class UserAuthentication(models.Model):
         verbose_name=_("Secret (client_id)"),
         help_text=_("Client_secret used to contact OAuth2 provider urls")
     )
-    oauth_redirect_uris = models.ListField(
+    oauth_redirect_uris = models.JSONField(
         models.CharField(
             null=False
         ),
