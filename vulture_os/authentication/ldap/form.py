@@ -49,6 +49,7 @@ class LDAPRepositoryForm(ModelForm):
         model = LDAPRepository
         fields = ('name', 'host', 'port', 'protocol', 'encryption_scheme', 'connection_dn', 'dn_password', 'base_dn',
                   'user_scope', 'user_dn', 'user_attr', 'user_filter', 'user_account_locked_attr', 'user_smartcardid_attr',
+                  'user_type_attr', 'user_firstname_attr', 'user_lastname_attr', 'user_authorisation_attr',
                   'user_change_password_attr', 'user_groups_attr', 'user_mobile_attr', 'user_email_attr',
                   'group_scope', 'group_dn', 'group_attr', 'group_filter', 'group_member_attr')
         widgets = {
@@ -64,6 +65,10 @@ class LDAPRepositoryForm(ModelForm):
             'user_dn': TextInput(attrs={'class': 'form-control'}),
             'user_attr': TextInput(attrs={'class': 'form-control'}),
             'user_filter': TextInput(attrs={'class': 'form-control'}),
+            'user_type_attr': TextInput(attrs={'class': 'form-control'}),
+            'user_firstname_attr': TextInput(attrs={'class': 'form-control'}),
+            'user_lastname_attr': TextInput(attrs={'class': 'form-control'}),
+            'user_authorisation_attr': TextInput(attrs={'class': 'form-control'}),
             'user_account_locked_attr': TextInput(attrs={'class': 'form-control'}),
             'user_change_password_attr': TextInput(attrs={'class': 'form-control'}),
             'user_groups_attr': TextInput(attrs={'class': 'form-control'}),

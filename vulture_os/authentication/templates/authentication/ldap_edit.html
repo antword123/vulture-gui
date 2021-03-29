@@ -237,6 +237,54 @@
                         <div class="row">
                           <div class="col-md-12">
                             <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ form.user_type_attr.label }}</label>
+                                <div class="col-sm-5">
+                                  {{form.user_type_attr}}
+                                  {{form.user_type_attr.errors|safe}}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ form.user_firstname_attr.label }}</label>
+                                <div class="col-sm-5">
+                                  {{form.user_firstname_attr}}
+                                  {{form.user_firstname_attr.errors|safe}}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ form.user_lastname_attr.label }}</label>
+                                <div class="col-sm-5">
+                                  {{form.user_lastname_attr}}
+                                  {{form.user_lastname_attr.errors|safe}}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">{{ form.user_authorisation_attr.label }}</label>
+                                <div class="col-sm-5">
+                                  {{form.user_authorisation_attr}}
+                                  {{form.user_authorisation_attr.errors|safe}}
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
                               <label class="col-sm-4 control-label">{{ form.user_account_locked_attr.label }}</label>
                                 <div class="col-sm-5">
                                   {{form.user_account_locked_attr}}

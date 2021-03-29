@@ -71,9 +71,8 @@ class IDPApiView(View):
                 })
             
             elif object_type == "users":
-                group_name = request.GET['group_name']
-                data = tools.get_users(ldap_repo, group_name)
-                users = [elem[ldap_repo.user_attr][0] for elem in data]
+                group_name = request.GET.get('group_name')
+                users = tools.get_users(ldap_repo, group_name)
                 return JsonResponse({
                     "data": users
                 })
@@ -86,7 +85,7 @@ class IDPApiView(View):
                 })
 
         except KeyError as err:
-            logger.debug(err)
+            logger.error(err)
             return JsonResponse({
                 "status": False,
                 "error": _("Invalid call")
@@ -117,11 +116,16 @@ class IDPApiUserView(View):
 
             user = {
                 ldap_repo.user_attr: request.JSON['username'],
-                ldap_repo.user_email_attr: request.JSON['email'],
                 ldap_repo.user_groups_attr: request.JSON.get('group')
             }
 
             attrs = {}
+
+            try:
+                attrs[ldap_repo.user_email_attr] = request.JSON['email']
+            except  KeyError:
+                pass
+
             try:
                 attrs[ldap_repo.user_account_locked_attr] = request.JSON['is_locked']
             except KeyError:
@@ -139,6 +143,26 @@ class IDPApiUserView(View):
 
             try:
                 attrs[ldap_repo.user_smartcardid_attr] = request.JSON['smartcardid']
+            except KeyError:
+                pass
+
+            try:
+                attrs[ldap_repo.user_type_attr] = request.JSON['user_type']
+            except KeyError:
+                pass
+            
+            try:
+                attrs[ldap_repo.user_firstname_attr] = request.JSON['first_name']
+            except KeyError:
+                pass
+
+            try:
+                attrs[ldap_repo.user_lastname_attr] = request.JSON['last_name']
+            except KeyError:
+                pass
+
+            try:
+                attrs[ldap_repo.user_authorisation_attr] = request.JSON['authorisations']
             except KeyError:
                 pass
 
@@ -199,6 +223,18 @@ class IDPApiUserView(View):
             
             if ldap_repo.user_smartcardid_attr:
                 attrs[ldap_repo.user_smartcardid_attr] = request.JSON.get('smartcardid')
+            
+            if ldap_repo.user_type_attr:
+                attrs[ldap_repo.user_type_attr] = request.JSON.get('user_type')
+
+            if ldap_repo.user_firstname_attr:
+                attrs[ldap_repo.user_firstname_attr] = request.JSON.get('first_name')
+
+            if ldap_repo.user_lastname_attr:
+                attrs[ldap_repo.user_lastname_attr] = request.JSON.get('last_name')
+
+            if ldap_repo.user_authorisation_attr:
+                attrs[ldap_repo.user_authorisation_attr] = request.JSON.get('authorisations')
 
             status, user_dn = tools.update_user(ldap_repo, group_name, dn, user_name, attrs, request.JSON.get('userPassword'))
             if status is False:
@@ -242,7 +278,7 @@ class IDPApiUserView(View):
             user_dn = request.JSON['id']
             group_name = request.JSON.get('group')
 
-            status = tools.delete_user(ldap_repo, group_name, user_dn)
+            status, user_id = tools.delete_user(ldap_repo, group_name, user_dn)
             if status is False:
                 return JsonResponse({
                     "status": False,
@@ -250,10 +286,11 @@ class IDPApiUserView(View):
                 }, status=404)
 
             return JsonResponse({
-                "status": True
+                "status": True,
+                "user_id": user_id
             })
         except KeyError as err:
-            logger.debug(err)
+            logger.error(err)
             return JsonResponse({
                 "status": False,
                 "error": _("Invalid call")

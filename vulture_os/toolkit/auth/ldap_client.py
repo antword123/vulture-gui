@@ -90,6 +90,10 @@ class LDAPClient(BaseAuth):
         self.user_email_attr = settings.user_email_attr
         self.user_groups_attr = settings.user_groups_attr
         self.user_smartcardid_attr = settings.user_smartcardid_attr
+        self.user_type_attr = settings.user_type_attr
+        self.user_firstname_attr = settings.user_firstname_attr
+        self.user_lastname_attr = settings.user_lastname_attr
+        self.user_authorisation_attr = settings.user_authorisation_attr
         # Group related settings
         try:
             self.group_dn = settings.group_dn

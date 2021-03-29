@@ -235,7 +235,7 @@ class LDAPViewApi(View):
                 user_attr = tmp_user[ldap_repository.user_attr]
 
                 attrs = {}
-                for attribute in ('user_account_locked_attr', 'user_change_password_attr', 'user_mobile_attr', 'user_email_attr'):
+                for attribute in tools.AVAILABLE_USER_KEYS:
                     ldap_attr = getattr(ldap_repository, attribute)
                     if ldap_attr and tmp_user.get(ldap_attr):
                         attrs[ldap_attr] = [tmp_user[ldap_attr]]

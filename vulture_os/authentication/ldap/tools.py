@@ -30,7 +30,7 @@ logger = logging.getLogger('api')
 
 
 AVAILABLE_GROUP_KEYS = ("group_attr",)
-AVAILABLE_USER_KEYS = ("user_attr", "user_account_locked_attr", "user_change_password_attr", "user_mobile_attr", "user_email_attr", "user_smartcardid_attr")
+AVAILABLE_USER_KEYS = ("user_attr", "user_account_locked_attr", "user_change_password_attr", "user_mobile_attr", "user_email_attr", "user_smartcardid_attr", "user_firstname_attr", "user_lastname_attr", "user_type_attr", "user_authorisation_attr")
 
 
 def find_user(ldap_repo, user_dn, attr_list):
@@ -77,15 +77,62 @@ def search_users(ldap_repo, search, by_dn=False):
     return data
 
 def get_users(ldap_repository, group_name):
-    if ldap_repository.base_dn not in group_name:
-        group_dn = ldap_repository.create_group_dn(group_name)
+    if not group_name:
+        group_dn = f"{ldap_repository.group_dn},{ldap_repository.base_dn}"
     else:
-        group_dn = group_name
+        if ldap_repository.base_dn not in group_name:
+            group_dn = ldap_repository.create_group_dn(group_name)
+        else:
+            group_dn = group_name
 
     group = find_group(ldap_repository, group_dn, ['*'])
     members  = []
     for member_dn in group['member']:
-        members.append(find_user(ldap_repository, member_dn, ["*"]))    
+        ldap_user = find_user(ldap_repository, member_dn, attr_list=["*"])
+        print(ldap_user)
+        user = {
+            "id": ldap_user["dn"],
+            "username": ldap_user[ldap_repository.user_attr][0]
+        }
+
+        if ldap_repository.user_email_attr:
+            user['email'] = ldap_user[ldap_repository.user_email_attr]
+
+        if ldap_repository.user_account_locked_attr:
+            user['is_locked'] = ldap_user[ldap_repository.user_account_locked_attr]
+        
+        if ldap_repository.user_change_password_attr:
+            user['need_change_password'] = ldap_user[ldap_repository.user_change_password_attr]
+        
+        if ldap_repository.user_mobile_attr:
+            user['mobile'] = ldap_user[ldap_repository.user_mobile_attr]
+        
+        if ldap_repository.user_smartcardid_attr:
+            user['smartcardid'] = ldap_user[ldap_repository.user_smartcardid_attr]
+        
+        if ldap_repository.user_type_attr:
+            user['user_type'] = ldap_user[ldap_repository.user_type_attr]
+
+        if ldap_repository.user_firstname_attr:
+            user['first_name'] = ldap_user[ldap_repository.user_firstname_attr]
+
+        if ldap_repository.user_lastname_attr:
+            user['last_name'] = ldap_user[ldap_repository.user_lastname_attr]
+
+        if ldap_repository.user_authorisation_attr:
+            user['authorisations'] = ldap_user[ldap_repository.user_authorisation_attr]
+
+        for key in ('email', 'is_locked', 'need_change_password', 'mobile', 'smartcardid', 'user_type', 'first_name', 'last_name'):
+            if isinstance(user.get(key), list):
+                user[key] = user[key][0]
+
+        if not isinstance(user["authorisations"], list):
+            if user["authorisations"] == "":
+                user["authorisations"] = []
+            else:
+                user["authorisations"] = [user["authorisations"]]
+
+        members.append(user)
     return members
 
 
@@ -197,4 +244,4 @@ def delete_user(ldap_repository, group_name, user_dn):
     groups = [find_group(ldap_repository, group_dn, ["*"]) for group_dn in client.search_user_groups_by_dn(user_dn)]
     r = client.delete_user(user_dn, groups)
     logger.info(f"User {user_dn} deleted in LDAP {ldap_repository.name}")
-    return r
+    return r, user_dn

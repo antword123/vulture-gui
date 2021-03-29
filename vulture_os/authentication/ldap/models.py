@@ -150,6 +150,13 @@ class LDAPRepository(BaseRepository):
         default='(objectclass=person)',
         help_text=_('Filter used to found user. Ex: (objectClass=person)')
     )
+
+    user_type_attr = models.TextField(
+        verbose_name=_("User Type attributes"),
+        help_text=_("Attribute which contains user's type"),
+        default=""
+    )
+
     user_account_locked_attr = models.TextField(
         verbose_name=_("Account locked filter"),
         help_text=_('Filter used to identify if an  account is locked.  Ex: (lockoutTime>=1)')
@@ -169,6 +176,24 @@ class LDAPRepository(BaseRepository):
     user_email_attr = models.TextField(
         verbose_name=_("Email attribute"),
         help_text=_("Attribute which contains user's email address")
+    )
+
+    user_firstname_attr = models.TextField(
+        verbose_name=_("First name attribute"),
+        help_text=_("Attribute which contains user first name"),
+        default=""
+    )
+
+    user_lastname_attr = models.TextField(
+        verbose_name=_("Last name attribute"),
+        help_text=_("Attribute which contains user last name"),
+        default=""
+    )
+
+    user_authorisation_attr = models.TextField(
+        verbose_name=_("Authorisation attribute"),
+        help_text=_("Attribute which contains user authorisation"),
+        default=""
     )
 
     user_smartcardid_attr = models.TextField(
